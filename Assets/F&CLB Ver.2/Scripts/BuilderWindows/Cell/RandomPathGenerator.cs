@@ -1,12 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 
 public class RandomPathGenerator : CellBuilder
 {
     public float turnChance = 0.5f;
-    [MenuItem("Window/Level Builders/Random Path Generator")]
+ //   [MenuItem("Window/Level Builders/Rooms/Random Path Generator")]
     private static void ShowWindow()
     {
         GetWindow<RandomPathGenerator>().InitializeWindow<RandomPathGenerator>();
@@ -22,7 +21,7 @@ public class RandomPathGenerator : CellBuilder
         Cell[,,] cells = new Cell[size.x, size.y, size.z];
         for (int i = 0; i < 3; i++)
         {
-            start[i] = buildPosition[i] + Random.Range(0, size[i]);
+            start[i] = buildPosition[i] + Random(0, size[i]);
         }
         while (flag)
         {
@@ -31,4 +30,4 @@ public class RandomPathGenerator : CellBuilder
         BuilderHelper.ClearCellScripts(cells);
     }
 }
-
+#endif

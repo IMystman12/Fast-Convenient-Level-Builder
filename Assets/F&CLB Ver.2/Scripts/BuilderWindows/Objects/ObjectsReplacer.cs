@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ public class ObjectsReplacer : BuilderWindow
     [SerializeField]
     protected GameObject[] objects;
     protected bool snap;
-    [MenuItem("Window/Level Builders/Object Re-placer")]
+    [MenuItem("Window/Level Builders/Objects/Re-placer")]
     private static void ShowWindow()
     {
         GetWindow<ObjectsReplacer>().InitializeWindow<ObjectsReplacer>();
@@ -36,8 +37,9 @@ public class ObjectsReplacer : BuilderWindow
     }
     protected void RandomPlace(GameObject itm, int height)
     {
-        Vector3 position = ((Vector3)buildPosition * 10f) + new Vector3(UnityEngine.Random.Range(0, size.x * 10), height * 10, UnityEngine.Random.Range(0, size.z * 10));
+        Vector3 position = ((Vector3)buildPosition * 10f) + new Vector3(Random(0, size.x * 10), height * 10, Random(0, size.z * 10));
         position = snap ? BuilderHelper.GetGridPosition(position) * 10 : position;
         itm.transform.position = position;
     }
 }
+#endif

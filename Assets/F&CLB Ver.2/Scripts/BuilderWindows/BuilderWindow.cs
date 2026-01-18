@@ -1,9 +1,13 @@
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 public class BuilderWindow : EditorWindow
 {
     public static Vector3Int buildPosition => BuilderHelper.position;
     protected static Vector3Int size => BuilderRenderer.Instance.size;
+    protected static bool useSeed;
+    protected static int seed, previousSeed;
+    protected static System.Random random;
     protected virtual void OnGUI()
     {
         InitializeRenderer();
@@ -13,6 +17,16 @@ public class BuilderWindow : EditorWindow
             BuilderRenderer.Instance.transform.position = v * 10;
         }
         BuilderRenderer.Instance.size = EditorGUILayout.Vector3IntField("Size:", size);
+        useSeed = GUILayout.Toggle(useSeed, "Use Seed:");
+        if (useSeed)
+        {
+            previousSeed = EditorGUILayout.IntField("Seed:", seed);
+            if (random == null || previousSeed != seed || GUILayout.Button("New Random!"))
+            {
+                random = new System.Random(seed);
+            }
+            seed = previousSeed;
+        }
         VirtualVariablesOnGUI();
         if (GUILayout.Button("Build!"))
         {
@@ -38,6 +52,20 @@ public class BuilderWindow : EditorWindow
     {
 
     }
+    public static int Random(int minInclude, int maxExclude)
+    {
+        if (useSeed)
+        {
+            return random.Next(minInclude, maxExclude);
+        }
+        return UnityEngine.Random.Range(minInclude, maxExclude);
+    }
+    protected Transform CreateParentFromPosition(string name)
+    {
+        Transform t = new GameObject(name).transform;
+        t.position = buildPosition * 10;
+        return t;
+    }
 }
 public class CellBuilder : BuilderWindow
 {
@@ -58,3 +86,4 @@ public class CellBuilder : BuilderWindow
         floor = EditorGUILayout.ObjectField("Floor:", floor, typeof(Material), false) as Material;
     }
 }
+#endif

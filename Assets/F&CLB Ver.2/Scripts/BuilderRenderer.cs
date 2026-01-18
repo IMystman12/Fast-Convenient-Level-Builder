@@ -1,5 +1,5 @@
+#if UNITY_EDITOR
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class BuilderRenderer : MonoBehaviour
@@ -34,7 +34,7 @@ public static class BuilderHelper
     {
         if (list.Count > 0)
         {
-            return list[list.Count > 1 ? UnityEngine.Random.Range(0, list.Count) : 0];
+            return list[list.Count > 1 ? BuilderWindow.Random(0, list.Count) : 0];
         }
         return default;
     }
@@ -171,3 +171,4 @@ public static class BuilderHelper
         }
     }
 }
+#endif

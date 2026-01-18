@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 
 public class Cell : MonoBehaviour
@@ -97,3 +98,4 @@ public class Cell : MonoBehaviour
         }
     }
 }
+#endif

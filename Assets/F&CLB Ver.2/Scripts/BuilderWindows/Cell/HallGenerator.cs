@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using Random = UnityEngine.Random;
 using System.Collections.Generic;
 using UnityEditor;
@@ -13,7 +14,7 @@ public class HallGenerator : CellBuilder
         Outline,
         Completely
     }
-    [MenuItem("Window/Level Builders/Hall Generator")]
+    [MenuItem("Window/Level Builders/Rooms/Hall Generator")]
     private static void ShowWindow()
     {
         GetWindow<HallGenerator>().InitializeWindow<HallGenerator>();
@@ -29,13 +30,12 @@ public class HallGenerator : CellBuilder
     protected override void Build()
     {
     IL_0001:
-        Transform roomBase = new GameObject("Room").transform;
-        roomBase.transform.position = buildPosition * 10;
+        Transform roomBase = CreateParentFromPosition("Room");
         Plot[,,] plotMap = new Plot[size.x, size.y, size.z];
         List<Plot> plots = new List<Plot>();
 
         {
-            int pc = Random.Range(minPlotCount, maxPlotCount);
+            int pc = Random(minPlotCount, maxPlotCount);
             List<Vector3Int> list = new List<Vector3Int>();
             Plot p;
             for (int i = 0; i < pc; i++)
@@ -43,13 +43,13 @@ public class HallGenerator : CellBuilder
                 p = new Plot();
                 for (int j = 0; j < 3; j++)
                 {
-                    p.start[j] = Random.Range(0, size[j]);
+                    p.start[j] = Random(0, size[j]);
                 }
                 while (list.Contains(p.start))
                 {
                     for (int j = 0; j < 3; j++)
                     {
-                        p.start[j] = Random.Range(0, size[j]);
+                        p.start[j] = Random(0, size[j]);
                     }
                 }
                 p.end = p.start;
@@ -81,7 +81,7 @@ public class HallGenerator : CellBuilder
                     }
                     else
                     {
-                        c = Random.Range(0, dirs.Count);
+                        c = Random(0, dirs.Count);
                         plots[j].Resize(dirs[c], pathWidth);
                         plots[j].Fill(plotMap);
                     }
@@ -91,30 +91,69 @@ public class HallGenerator : CellBuilder
 
         {
             Cell[,,] cells = new Cell[size.x, size.y, size.z];
-            Vector3Int v3, v2;
-            bool flag;
-            for (int a = 0; a < size.x; a++)
+            Vector3Int v3;
+            switch (fillType)
             {
-                for (int b = 0; b < size.y; b++)
-                {
-                    for (int c = 0; c < size.z; c++)
+                case FillType.Outline:
+                    Plot p = new Plot();
+                    bool flag;
+                    for (int a = 0; a < size.x; a++)
                     {
-                        v3 = new Vector3Int(a, b, c);
-                        switch (fillType)
+                        for (int b = 0; b < size.y; b++)
                         {
-                            case FillType.Outline:
-                                Debug.Log("FillType.Outline doesn't supported! Please switch to another one!");
-                                break;
-                            case FillType.Completely:
+                            for (int c = 0; c < size.z; c++)
+                            {
+                                if (plotMap[a, b, c] == null)
+                                {
+                                    flag = false;
+                                    v3 = new Vector3Int(a, b, c);
+                                    for (int i = 0; i < 3; i++)
+                                    {
+                                        p.start[i] = Mathf.Max(0, v3[i] - 1);
+                                        p.end[i] = Mathf.Min(size[i] - 1, v3[i] + 1);
+                                    }
+
+                                    for (int d = p.start.x; d < p.end.x + 1; d++)
+                                    {
+                                        for (int e = p.start.y; e < p.end.y + 1; e++)
+                                        {
+                                            for (int f = p.start.z; f < p.end.z + 1; f++)
+                                            {
+                                                if (plotMap[d, e, f] != null)
+                                                {
+                                                    flag = true;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    if (flag)
+                                    {
+                                        cells[a, b, c] = BuilderHelper.CreateCell(v3, roomBase);
+                                        BuilderHelper.ConnectAround(cells, v3);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case FillType.Completely:
+                    for (int a = 0; a < size.x; a++)
+                    {
+                        for (int b = 0; b < size.y; b++)
+                        {
+                            for (int c = 0; c < size.z; c++)
+                            {
+                                v3 = new Vector3Int(a, b, c);
                                 if (plotMap[a, b, c] == null)
                                 {
                                     cells[a, b, c] = BuilderHelper.CreateCell(v3, roomBase);
                                     BuilderHelper.ConnectAround(cells, v3);
                                 }
-                                break;
+                            }
                         }
                     }
-                }
+                    break;
             }
         }
     }
@@ -183,3 +222,4 @@ public class HallGenerator : CellBuilder
         }
     }
 }
+#endif

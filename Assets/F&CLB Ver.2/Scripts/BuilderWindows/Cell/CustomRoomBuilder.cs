@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ public class CustomRoomBuilder : CellBuilder
     bool x, y = true, z, xF, yF, zF, pastOn, pastOff;
     bool[,,] blocks;
     GUILayoutOption[] standardOptions => new GUILayoutOption[] { GUILayout.Height(10), GUILayout.Width(10) };
-    [MenuItem("Window/Level Builders/Custom Room")]
+    [MenuItem("Window/Level Builders/Rooms/Custom Room")]
     public static void ShowWindow()
     {
         GetWindow<CustomRoomBuilder>().InitializeWindow<CustomRoomBuilder>();
@@ -163,8 +164,7 @@ public class CustomRoomBuilder : CellBuilder
     }
     protected override void Build()
     {
-        Transform room = new GameObject("Room").transform;
-        room.position = buildPosition * 10;
+        Transform room = CreateParentFromPosition("Room");
         Cell[,,] cells = new Cell[size.x, size.y, size.z];
         for (int x = 0; x < cells.GetLength(0); x++)
         {
@@ -184,3 +184,4 @@ public class CustomRoomBuilder : CellBuilder
         BuilderHelper.ClearCellScripts(cells);
     }
 }
+#endif

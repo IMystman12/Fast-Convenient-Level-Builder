@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -5,7 +6,7 @@ using UnityEngine;
 public class MazeGenerator : CellBuilder
 {
     int patchCount = 1, minPatchSize = 5, maxPatchSize = 10, minPatchConnections = 2, maxPatchConnections = 3, perPatchAttempts = 100;
-    [MenuItem("Window/Level Builders/Maze Generator")]
+    [MenuItem("Window/Level Builders/Rooms/Maze Generator")]
     private static void ShowWindow()
     {
         GetWindow<MazeGenerator>().InitializeWindow<MazeGenerator>();
@@ -23,8 +24,7 @@ public class MazeGenerator : CellBuilder
     protected override void Build()
     {
     IL_0001:
-        Transform transform = new GameObject("Room").transform;
-        transform.position = buildPosition * 10;
+        Transform transform = CreateParentFromPosition("Room");
         Cell[,,] cells = new Cell[size.x, size.y, size.z];
         Vector3Int sizePatch = Vector3Int.zero, positionPatch = Vector3Int.zero, positionCur, start, end;
         int attempts;
@@ -35,7 +35,7 @@ public class MazeGenerator : CellBuilder
         {
             for (int j = 0; j < 3; j++)
             {
-                sizePatch[j] = Mathf.Min(size[j], Random.Range(minPatchSize, maxPatchSize + 1));
+                sizePatch[j] = Mathf.Min(size[j], Random(minPatchSize, maxPatchSize + 1));
             }
             attempts = 0;
             flag0 = false;
@@ -44,7 +44,7 @@ public class MazeGenerator : CellBuilder
                 attempts++;
                 for (int j = 0; j < 3; j++)
                 {
-                    positionPatch[j] = Random.Range(0, size[j] - sizePatch[j] + 1);
+                    positionPatch[j] = Random(0, size[j] - sizePatch[j] + 1);
                 }
 
                 //check patch
@@ -97,7 +97,7 @@ public class MazeGenerator : CellBuilder
                         }
                     }
 
-                    int countConnections = Random.Range(minPatchConnections, maxPatchConnections);
+                    int countConnections = Random(minPatchConnections, maxPatchConnections);
                     for (int a = 0; a < countConnections; a++)
                     {
                         if (portentialPatchConnections.Count > 0)
@@ -118,7 +118,7 @@ public class MazeGenerator : CellBuilder
             attempts++;
             for (int i = 0; i < 3; i++)
             {
-                start[i] = Random.Range(0, size[i]);
+                start[i] = Random(0, size[i]);
             }
         }
         List<Vector3Int> activeCells = new List<Vector3Int>()
@@ -142,7 +142,7 @@ public class MazeGenerator : CellBuilder
                 dir = activeDirs.Random();
                 pos0 = pos + dir;
                 activeCells.Add(pos0);
-                cells[pos0.x, pos0.y, pos0.z] = BuilderHelper.CreateCell(pos0 , transform);
+                cells[pos0.x, pos0.y, pos0.z] = BuilderHelper.CreateCell(pos0, transform);
                 if (!BuilderHelper.CellFromPosition(cells, pos) || !BuilderHelper.CellFromPosition(cells, pos0))
                 {
                     Debug.Log("error");
@@ -177,3 +177,4 @@ public class MazeGenerator : CellBuilder
         BuilderHelper.ClearCellScripts(cells);
     }
 }
+#endif
