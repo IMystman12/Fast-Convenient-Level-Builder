@@ -43,6 +43,7 @@ public class BuilderWindow : EditorWindow
     protected virtual void InitializeWindow<T>() where T : EditorWindow
     {
         GetWindow<T>().Show();
+        BuilderRenderer.Instance.SetMartixMode(false);
     }
     protected virtual void VirtualVariablesOnGUI()
     {

@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class BuilderRenderer : MonoBehaviour
@@ -7,7 +8,34 @@ public class BuilderRenderer : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = areaColor;
-        Gizmos.DrawCube(BuilderHelper.position * 10 + new Vector3Int(size.x * 5 - 5, size.y * 5, size.z * 5 - 5), size * 10);
+        if (MartixObjectBuilder.objectVolumn == null)
+        {
+            Gizmos.DrawCube(BuilderHelper.position * 10 + new Vector3Int(size.x * 5 - 5, size.y * 5, size.z * 5 - 5), size * 10);
+        }
+        else
+        {
+            for (int a = 0; a < MartixObjectBuilder.objectVolumn.GetLength(0); a++)
+            {
+                for (int b = 0; b < MartixObjectBuilder.objectVolumn.GetLength(1); b++)
+                {
+                    for (int c = 0; c < MartixObjectBuilder.objectVolumn.GetLength(2); c++)
+                    {
+                        if (MartixObjectBuilder.objectVolumn[a, b, c] == null)
+                        {
+                            EditorWindow.GetWindow<MartixObjectBuilder>().Regenerate();
+                        }
+                        Gizmos.DrawCube(BuilderHelper.position * 10 + Vector3.Scale(new Vector3(a, b, c), MartixObjectBuilder.margin), MartixObjectBuilder.objectVolumn[a, b, c].volumn);
+                    }
+                }
+            }
+        }
+    }
+    public void SetMartixMode(bool val)
+    {
+        if (!val)
+        {
+            MartixObjectBuilder.objectVolumn = null;
+        }
     }
     public Color areaColor = new Color(0, 1, 0, 0.5f);
     public Vector3Int size = Vector3Int.one;
@@ -38,14 +66,24 @@ public static class BuilderHelper
         }
         return default;
     }
-    public static List<Vector3Int> GetFreeNeighbors(Cell[,,] cells, Vector3Int pos)
+    public static List<Vector3Int> GetFreeNeighbors(Cell[,,] cells, Vector3Int pos) => GetFreeNeighbors(cells, pos, 1);
+    public static List<Vector3Int> GetFreeNeighbors(Cell[,,] cells, Vector3Int pos, int range)
     {
         List<Vector3Int> result = new List<Vector3Int>();
         Vector3Int pos0;
+        bool flag;
         for (int i = 0; i < 6; i++)
         {
-            pos0 = pos + AllDirections[i];
-            if (!ContainsOutOfRange(cells, pos0) && !ContainsCell(cells, pos0))
+            flag = true;
+            for (int j = 0; j < range; j++)
+            {
+                pos0 = pos + AllDirections[i] * range;
+                if (ContainsOutOfRange(cells, pos0) || ContainsCell(cells, pos0))
+                {
+                    flag = false;
+                }
+            }
+            if (flag)
             {
                 result.Add(AllDirections[i]);
             }
@@ -82,10 +120,7 @@ public static class BuilderHelper
         }
         return false;
     }
-    public static bool ContainsCell(Cell[,,] cells, Vector3Int position)
-    {
-        return CellFromPosition(cells, position);
-    }
+    public static bool ContainsCell(Cell[,,] cells, Vector3Int position) => CellFromPosition(cells, position);
     public static Cell CellFromPosition(Cell[,,] cells, Vector3Int position)
     {
         if (!ContainsOutOfRange(cells, position))

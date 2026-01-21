@@ -1,14 +1,12 @@
 #if UNITY_EDITOR
-using Random = UnityEngine.Random;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 public class HallGenerator : CellBuilder
 {
-    int minPlotCount = 5, maxPlotCount = 6, minPlotSize = 9;
+    int minPlotCount = 5, maxPlotCount = 6, pathWidth = 1;
     FillType fillType;
-    const int pathWidth = 1;
     public enum FillType
     {
         Outline,
@@ -24,7 +22,7 @@ public class HallGenerator : CellBuilder
         base.VirtualVariablesOnGUI();
         minPlotCount = EditorGUILayout.IntField("Min Plot Count:", minPlotCount);
         maxPlotCount = EditorGUILayout.IntField("Max Plot Count:", maxPlotCount);
-        minPlotSize = EditorGUILayout.IntField("Min Plot Size:", minPlotSize);
+        pathWidth = EditorGUILayout.IntField("Path Width:", pathWidth);
         fillType = (FillType)EditorGUILayout.EnumPopup("Fill Type:", fillType);
     }
     protected override void Build()
@@ -155,6 +153,7 @@ public class HallGenerator : CellBuilder
                     }
                     break;
             }
+            BuilderHelper.ClearCellScripts(cells);
         }
     }
     public class Plot
