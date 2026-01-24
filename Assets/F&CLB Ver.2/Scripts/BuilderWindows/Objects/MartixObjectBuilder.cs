@@ -26,7 +26,6 @@ public class MartixObjectBuilder : BuilderWindow
     {
         base.InitializeWindow<T>();
         Regenerate();
-        BuilderRenderer.Instance.SetMartixMode(true);
     }
     protected override void VirtualVariablesOnGUI()
     {

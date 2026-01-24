@@ -30,13 +30,6 @@ public class BuilderRenderer : MonoBehaviour
             }
         }
     }
-    public void SetMartixMode(bool val)
-    {
-        if (!val)
-        {
-            MartixObjectBuilder.objectVolumn = null;
-        }
-    }
     public Color areaColor = new Color(0, 1, 0, 0.5f);
     public Vector3Int size = Vector3Int.one;
     public static BuilderRenderer Instance => instance;
