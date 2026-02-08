@@ -24,7 +24,7 @@ public class BuilderRenderer : MonoBehaviour
                         {
                             EditorWindow.GetWindow<MartixObjectBuilder>().Regenerate();
                         }
-                        Gizmos.DrawCube(BuilderHelper.position * 10 + Vector3.Scale(new Vector3(a, b, c), MartixObjectBuilder.margin), MartixObjectBuilder.objectVolumn[a, b, c].volumn);
+                        Gizmos.DrawCube(MartixObjectBuilder.objectVolumn[a, b, c].offset + BuilderHelper.position * 10 + Vector3.Scale(new Vector3(a, b, c), MartixObjectBuilder.margin), MartixObjectBuilder.objectVolumn[a, b, c].volumn);
                     }
                 }
             }
@@ -86,7 +86,7 @@ public static class BuilderHelper
     public static Vector3Int GetGridPosition(Vector3 position)
     {
         position /= 10;
-        return new Vector3Int(Mathf.FloorToInt(position.x), Mathf.FloorToInt(position.y), Mathf.FloorToInt(position.z));
+        return new Vector3Int(Mathf.RoundToInt(position.x), Mathf.FloorToInt(position.y), Mathf.RoundToInt(position.z));
     }
     public static Cell CreateCell(Vector3Int _position, Transform room = null)
     {

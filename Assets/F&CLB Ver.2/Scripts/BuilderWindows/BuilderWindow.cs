@@ -85,5 +85,16 @@ public class CellBuilder : BuilderWindow
         wall = EditorGUILayout.ObjectField("Wall:", wall, typeof(Material), false) as Material;
         floor = EditorGUILayout.ObjectField("Floor:", floor, typeof(Material), false) as Material;
     }
+    protected void SizeCheck(int val)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            if (size[i] < val)
+            {
+                BuilderRenderer.Instance.size = new Vector3Int(Mathf.Max(size.x, val), Mathf.Max(size.y, val), Mathf.Max(size.z, val));
+                break;
+            }
+        }
+    }
 }
 #endif

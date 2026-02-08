@@ -33,23 +33,43 @@ public class CustomRoomBuilder : CellBuilder
         y = EditorGUILayout.Toggle("Y ", y);
         z = EditorGUILayout.Toggle("Z ", z);
         EditorGUILayout.EndHorizontal();
-        bool flagModified = false;
         bool org = false;
+        bool invert = false;
+        if (GUILayout.Button("All On!"))
+        {
+            for (int a = 0; a < blocks.GetLength(0); a++)
+            {
+                for (int b = 0; b < blocks.GetLength(1); b++)
+                {
+                    for (int c = 0; c < blocks.GetLength(2); c++)
+                    {
+                        blocks[a, b, c] = true;
+                    }
+                }
+            }
+        }
+        if (GUILayout.Button("All Off!"))
+        {
+            for (int a = 0; a < blocks.GetLength(0); a++)
+            {
+                for (int b = 0; b < blocks.GetLength(1); b++)
+                {
+                    for (int c = 0; c < blocks.GetLength(2); c++)
+                    {
+                        blocks[a, b, c] = false;
+                    }
+                }
+            }
+        }
         if (x)
         {
             EditorGUILayout.Space(10);
             xF = EditorGUILayout.Foldout(xF, "X:");
             if (xF)
             {
-                if (GUILayout.Button("All On!"))
+                if (GUILayout.Button("Invert!"))
                 {
-                    flagModified = true;
-                    flag = true;
-                }
-                if (GUILayout.Button("All Off!"))
-                {
-                    flagModified = true;
-                    flag = false;
+                    invert = true;
                 }
                 EditorGUILayout.Space(5);
                 EditorGUILayout.LabelField("Blocks:");
@@ -59,9 +79,9 @@ public class CustomRoomBuilder : CellBuilder
                     for (int z = 0; z < blocks.GetLength(2); z++)
                     {
                         org = blocks[0, y, z];
-                        if (flagModified)
+                        if (invert)
                         {
-                            blocks[0, y, z] = flag;
+                            blocks[0, y, z] = !blocks[0, y, z];
                         }
                         blocks[0, y, z] = EditorGUILayout.Toggle(blocks[0, y, z], standardOptions);
                         if (org != blocks[0, y, z])
@@ -83,15 +103,9 @@ public class CustomRoomBuilder : CellBuilder
             yF = EditorGUILayout.Foldout(yF, "Y:");
             if (yF)
             {
-                if (GUILayout.Button("All On!"))
+                if (GUILayout.Button("Invert!"))
                 {
-                    flagModified = true;
-                    flag = true;
-                }
-                if (GUILayout.Button("All Off!"))
-                {
-                    flagModified = true;
-                    flag = false;
+                    invert = true;
                 }
                 EditorGUILayout.Space(5);
                 EditorGUILayout.LabelField("Blocks:");
@@ -101,9 +115,9 @@ public class CustomRoomBuilder : CellBuilder
                     for (int z = 0; z < blocks.GetLength(2); z++)
                     {
                         org = blocks[x, 0, z];
-                        if (flagModified)
+                        if (invert)
                         {
-                            blocks[x, 0, z] = flag;
+                            blocks[x, 0, z] = !blocks[x, 0, z];
                         }
                         blocks[x, 0, z] = EditorGUILayout.Toggle(blocks[x, 0, z], standardOptions);
                         if (org != blocks[x, 0, z])
@@ -125,15 +139,9 @@ public class CustomRoomBuilder : CellBuilder
             zF = EditorGUILayout.Foldout(zF, "Z:");
             if (zF)
             {
-                if (GUILayout.Button("All On!"))
+                if (GUILayout.Button("Invert!"))
                 {
-                    flagModified = true;
-                    flag = true;
-                }
-                if (GUILayout.Button("All Off!"))
-                {
-                    flagModified = true;
-                    flag = false;
+                    invert = true;
                 }
                 EditorGUILayout.Space(5);
                 EditorGUILayout.LabelField("Blocks:");
@@ -143,9 +151,9 @@ public class CustomRoomBuilder : CellBuilder
                     for (int x = blocks.GetLength(0) - 1; x > -1; x--)
                     {
                         org = blocks[x, y, 0];
-                        if (flagModified)
+                        if (invert)
                         {
-                            blocks[x, y, 0] = flag;
+                            blocks[x, y, 0] = !blocks[x, y, 0];
                         }
                         blocks[x, y, 0] = EditorGUILayout.Toggle(blocks[x, y, 0], standardOptions);
                         if (org != blocks[x, y, 0])

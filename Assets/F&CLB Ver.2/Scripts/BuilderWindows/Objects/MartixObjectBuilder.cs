@@ -9,7 +9,21 @@ public class MartixObjectBuilder : BuilderWindow
     public class ObjectVolumn
     {
         public GameObject gameObject;
-        public Vector3 volumn = Vector3.one * 10;
+        public Vector3 offset => renderer ? renderer.bounds.center + renderer.transform.position : Vector3.zero;
+        public Vector3 volumn => renderer ? renderer.bounds.size : Vector3.one * 10;
+        Renderer renderer
+        {
+            get
+            {
+                gameObject.transform.position = Vector3.zero;
+                Renderer renderer = gameObject.GetComponent<Renderer>();
+                if (!renderer)
+                {
+                    renderer = gameObject.GetComponentInChildren<Renderer>();
+                }
+                return renderer;
+            }
+        }
         public int weight = 100;
     }
     [SerializeField] private ObjectVolumn[] objects;
@@ -48,17 +62,14 @@ public class MartixObjectBuilder : BuilderWindow
                 new ObjectVolumn()
                 {
                      gameObject= Resources.Load<GameObject>("BigDesk_Mesh"),
-                     volumn=Vector3.one*10,
                 },
                 new ObjectVolumn()
                 {
                      gameObject=  Resources.Load<GameObject >("Table_Test_Mesh"),
-                     volumn=Vector3.one*10,
                 },
                 new ObjectVolumn()
                 {
                      gameObject=     Resources.Load<GameObject >("Chair_Test_Mesh"),
-                     volumn=Vector3.one*10,
                 },
             };
         }

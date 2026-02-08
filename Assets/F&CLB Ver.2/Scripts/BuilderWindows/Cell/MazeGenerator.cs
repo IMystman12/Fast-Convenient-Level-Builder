@@ -11,6 +11,11 @@ public class MazeGenerator : CellBuilder
     {
         GetWindow<MazeGenerator>().InitializeWindow<MazeGenerator>();
     }
+    protected override void InitializeWindow<T>()
+    {
+        base.InitializeWindow<T>();
+        SizeCheck(maxPatchSize * patchCount);
+    }
     protected override void VirtualVariablesOnGUI()
     {
         base.VirtualVariablesOnGUI();

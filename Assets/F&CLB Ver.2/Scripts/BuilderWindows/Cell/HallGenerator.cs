@@ -17,6 +17,11 @@ public class HallGenerator : CellBuilder
     {
         GetWindow<HallGenerator>().InitializeWindow<HallGenerator>();
     }
+    protected override void InitializeWindow<T>()
+    {
+        base.InitializeWindow<T>();
+        SizeCheck(maxPlotCount);
+    }
     protected override void VirtualVariablesOnGUI()
     {
         base.VirtualVariablesOnGUI();
@@ -59,15 +64,17 @@ public class HallGenerator : CellBuilder
 
         {
             int c;
+            Plot plot;
             List<int> dirs = new List<int>();
             while (plots.Count > 0)
             {
                 for (int j = 0; j < plots.Count; j++)
                 {
+                    plot = plots[j];
                     dirs.Clear();
                     for (int i = 0; i < 6; i++)
                     {
-                        if (plots[j].Check(plotMap, i, pathWidth + 1))
+                        if (plot.Check(plotMap, i, pathWidth + 1))
                         {
                             dirs.Add(i);
                         }
