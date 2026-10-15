@@ -33,7 +33,7 @@ public class HallGenerator : CellBuilder
     protected override void Build()
     {
     IL_0001:
-        Transform roomBase = CreateParentFromPosition("Room");
+        Transform roomBase = CreateParentFromPosition("Generated Hall",true);
         Plot[,,] plotMap = new Plot[size.x, size.y, size.z];
         List<Plot> plots = new List<Plot>();
 

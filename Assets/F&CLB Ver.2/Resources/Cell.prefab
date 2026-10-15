@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 3994603056879756986}
   - component: {fileID: 418058037859516003}
   - component: {fileID: 4633021348725180123}
-  - component: {fileID: 4890169319274532584}
   m_Layer: 0
   m_Name: _NavMesh
   m_TagString: Untagged
@@ -82,20 +81,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &4890169319274532584
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2008568903675196757}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &4227476916636285650
 GameObject:
   m_ObjectHideFlags: 0
@@ -153,7 +138,7 @@ MonoBehaviour:
   - {fileID: 4227476918210373515}
   - {fileID: 4227476918505447626}
   floor: {fileID: 4227476918087917449}
-  _NavMesh: {fileID: 4633021348725180123}
+  _navMesh: {fileID: 4633021348725180123}
 --- !u!1 &4227476917363813375
 GameObject:
   m_ObjectHideFlags: 0

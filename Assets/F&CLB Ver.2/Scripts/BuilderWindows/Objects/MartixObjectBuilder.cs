@@ -3,14 +3,14 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-public class MartixObjectBuilder : BuilderWindow
+public class MatrixObjectBuilder : BuilderWindow
 {
     [Serializable]
-    public class ObjectVolumn
+    public class ObjectVolume
     {
         public GameObject gameObject;
         public Vector3 offset => renderer ? renderer.bounds.center + renderer.transform.position : Vector3.zero;
-        public Vector3 volumn => renderer ? renderer.bounds.size : Vector3.one * 10;
+        public Vector3 volume => renderer ? renderer.bounds.size : Vector3.one * 10;
         Renderer renderer
         {
             get
@@ -26,21 +26,22 @@ public class MartixObjectBuilder : BuilderWindow
         }
         public int weight = 100;
     }
-    [SerializeField] private ObjectVolumn[] objects;
-    public static ObjectVolumn[,,] objectVolumn;
+    [SerializeField] private ObjectVolume[] objects;
+    public static ObjectVolume[,,] objectVolume;
     public static Vector3 margin = Vector3.one * 10;
     bool flag;
     public Vector3 rotation;
-    [MenuItem("Window/Level Builders/Objects/Martix")]
+    [MenuItem("Window/Level Builders/Objects/Matrix")]
     private static void ShowWindow()
     {
-        GetWindow<MartixObjectBuilder>().InitializeWindow<MartixObjectBuilder>();
+        GetWindow<MatrixObjectBuilder>().InitializeWindow<MatrixObjectBuilder>();
     }
     protected override void InitializeWindow<T>()
     {
         base.InitializeWindow<T>();
         Regenerate();
     }
+
     protected override void VirtualVariablesOnGUI()
     {
         CheckList();
@@ -58,16 +59,16 @@ public class MartixObjectBuilder : BuilderWindow
     {
         if (objects == null || objects.Length == 0)
         {
-            objects = new ObjectVolumn[]{
-                new ObjectVolumn()
+            objects = new ObjectVolume[]{
+                new ObjectVolume()
                 {
                      gameObject= Resources.Load<GameObject>("BigDesk_Mesh"),
                 },
-                new ObjectVolumn()
+                new ObjectVolume()
                 {
                      gameObject=  Resources.Load<GameObject >("Table_Test_Mesh"),
                 },
-                new ObjectVolumn()
+                new ObjectVolume()
                 {
                      gameObject=     Resources.Load<GameObject >("Chair_Test_Mesh"),
                 },
@@ -82,7 +83,7 @@ public class MartixObjectBuilder : BuilderWindow
         {
             num += objects[i].weight;
         }
-        objectVolumn = new ObjectVolumn[size.x, size.y, size.z];
+        objectVolume = new ObjectVolume[size.x, size.y, size.z];
         for (int a = 0; a < size.x; a++)
         {
             for (int b = 0; b < size.y; b++)
@@ -90,11 +91,11 @@ public class MartixObjectBuilder : BuilderWindow
                 for (int c = 0; c < size.z; c++)
                 {
                     num0 = Random(0, num);
-                    for (int i = 0; objectVolumn[a, b, c] == null; i++)
+                    for (int i = 0; objectVolume[a, b, c] == null; i++)
                     {
                         if (i == objects.Length - 1 || objects[i].weight > num0)
                         {
-                            objectVolumn[a, b, c] = objects[i];
+                            objectVolume[a, b, c] = objects[i];
                         }
                         num0 -= objects[i].weight;
                     }
@@ -102,9 +103,10 @@ public class MartixObjectBuilder : BuilderWindow
             }
         }
     }
+    void OnDestroy() => objectVolume = null;
     protected override void Build()
     {
-        Transform roomBase = CreateParentFromPosition("Objects");
+        Transform roomBase = CreateParentFromPosition("Matrix Objects", true);
         Quaternion quaternion = Quaternion.Euler(rotation);
         for (int a = 0; a < size.x; a++)
         {
@@ -112,7 +114,7 @@ public class MartixObjectBuilder : BuilderWindow
             {
                 for (int c = 0; c < size.z; c++)
                 {
-                    Instantiate(objectVolumn[a, b, c].gameObject, BuilderHelper.position * 10 + Vector3.Scale(new Vector3(a, b, c), margin), quaternion, roomBase);
+                    Instantiate(objectVolume[a, b, c].gameObject, BuilderHelper.position * 10 + Vector3.Scale(new Vector3(a, b, c), margin), quaternion, roomBase);
                 }
             }
         }

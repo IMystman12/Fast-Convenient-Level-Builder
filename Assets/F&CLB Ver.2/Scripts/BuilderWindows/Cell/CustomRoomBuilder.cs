@@ -172,7 +172,7 @@ public class CustomRoomBuilder : CellBuilder
     }
     protected override void Build()
     {
-        Transform room = CreateParentFromPosition("Room");
+        Transform room = CreateParentFromPosition("Custom Room", true);
         Cell[,,] cells = new Cell[size.x, size.y, size.z];
         for (int x = 0; x < cells.GetLength(0); x++)
         {

@@ -11,7 +11,7 @@ public class RoomBuilder : CellBuilder
     }
     protected override void Build()
     {
-        Transform transform = CreateParentFromPosition("Room");
+        Transform transform = CreateParentFromPosition("Base Room", true);
         Cell[,,] cells = new Cell[size.x, size.y, size.z];
         Vector3Int position;
         for (int x = 0; x < cells.GetLength(0); x++)

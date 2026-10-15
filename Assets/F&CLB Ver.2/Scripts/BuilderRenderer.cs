@@ -8,23 +8,23 @@ public class BuilderRenderer : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = areaColor;
-        if (MartixObjectBuilder.objectVolumn == null)
+        if (MatrixObjectBuilder.objectVolume == null)
         {
             Gizmos.DrawCube(BuilderHelper.position * 10 + new Vector3Int(size.x * 5 - 5, size.y * 5, size.z * 5 - 5), size * 10);
         }
         else
         {
-            for (int a = 0; a < MartixObjectBuilder.objectVolumn.GetLength(0); a++)
+            for (int a = 0; a < MatrixObjectBuilder.objectVolume.GetLength(0); a++)
             {
-                for (int b = 0; b < MartixObjectBuilder.objectVolumn.GetLength(1); b++)
+                for (int b = 0; b < MatrixObjectBuilder.objectVolume.GetLength(1); b++)
                 {
-                    for (int c = 0; c < MartixObjectBuilder.objectVolumn.GetLength(2); c++)
+                    for (int c = 0; c < MatrixObjectBuilder.objectVolume.GetLength(2); c++)
                     {
-                        if (MartixObjectBuilder.objectVolumn[a, b, c] == null)
+                        if (MatrixObjectBuilder.objectVolume[a, b, c] == null)
                         {
-                            EditorWindow.GetWindow<MartixObjectBuilder>().Regenerate();
+                            EditorWindow.GetWindow<MatrixObjectBuilder>().Regenerate();
                         }
-                        Gizmos.DrawCube(MartixObjectBuilder.objectVolumn[a, b, c].offset + BuilderHelper.position * 10 + Vector3.Scale(new Vector3(a, b, c), MartixObjectBuilder.margin), MartixObjectBuilder.objectVolumn[a, b, c].volumn);
+                        Gizmos.DrawCube(MatrixObjectBuilder.objectVolume[a, b, c].offset + BuilderHelper.position * 10 + Vector3.Scale(new Vector3(a, b, c), MatrixObjectBuilder.margin), MatrixObjectBuilder.objectVolume[a, b, c].volume);
                     }
                 }
             }
@@ -32,8 +32,8 @@ public class BuilderRenderer : MonoBehaviour
     }
     public Color areaColor = new Color(0, 1, 0, 0.5f);
     public Vector3Int size = Vector3Int.one;
-    public static BuilderRenderer Instance => instance;
-    private static BuilderRenderer instance => FindFirstObjectByType<BuilderRenderer>();
+    public static BuilderRenderer Instance => instance ??= FindFirstObjectByType<BuilderRenderer>();
+    private static BuilderRenderer instance;
 }
 public static class BuilderHelper
 {
@@ -98,6 +98,7 @@ public static class BuilderHelper
         else
         {
             val = Object.Instantiate<Cell>(Resources.Load<Cell>("Cell"), (_position + position) * 10, Quaternion.identity);
+            Undo.RegisterCreatedObjectUndo(val.gameObject, "Create Cell");
         }
         val.Initialize();
         return val;
@@ -170,10 +171,6 @@ public static class BuilderHelper
             }
         }
         return directions.Length;
-    }
-    public static void RandomlyPlaceObject()
-    {
-
     }
     public static void ClearCellScripts(Cell[,,] cells)
     {

@@ -6,7 +6,7 @@ public class Cell : MonoBehaviour
     public MeshRenderer ceiling;
     public MeshRenderer[] walls = new MeshRenderer[4];
     public MeshRenderer floor;
-    public MeshRenderer _NavMesh;
+    public MeshRenderer _navMesh;
     public Vector3Int localPosition => BuilderHelper.GetGridPosition(transform.localPosition);
     public bool Null
     {
@@ -43,19 +43,23 @@ public class Cell : MonoBehaviour
         {
             DestroyImmediate(floor.gameObject);
         }
+        if (!CellBuilder.navigationSurface && _navMesh)
+        {
+            DestroyImmediate(_navMesh.gameObject);
+        }
     }
     public void DestroyWall(int dir)
     {
-        Vector3 vector = _NavMesh ? _NavMesh.transform.localPosition : Vector3.zero;
+        Vector3 vector = _navMesh ? _navMesh.transform.localPosition : Vector3.zero;
         MeshRenderer _destroy = null;
         switch (dir)
         {
             case 0:
                 _destroy = walls[0];
-                if (_NavMesh)
+                if (_navMesh)
                 {
                     vector.z = 2;
-                    _NavMesh.transform.localScale += Vector3.up * 4;
+                    _navMesh.transform.localScale += Vector3.up * 4;
                 }
                 break;
             case 1:
@@ -63,49 +67,49 @@ public class Cell : MonoBehaviour
                 break;
             case 2:
                 _destroy = walls[1];
-                if (_NavMesh)
+                if (_navMesh)
                 {
                     vector.x = 2;
-                    _NavMesh.transform.localScale += Vector3.left * -4;
+                    _navMesh.transform.localScale += Vector3.left * -4;
                 }
                 break;
             case 3:
                 _destroy = walls[2];
-                if (_NavMesh)
+                if (_navMesh)
                 {
                     vector.z = -2;
-                    _NavMesh.transform.localScale += Vector3.up * 4;
+                    _navMesh.transform.localScale += Vector3.up * 4;
                 }
                 break;
             case 4:
                 _destroy = floor;
-                if (_NavMesh)
+                if (_navMesh)
                 {
-                    DestroyImmediate(_NavMesh.gameObject);
+                    DestroyImmediate(_navMesh.gameObject);
                 }
                 break;
             case 5:
                 _destroy = walls[3];
-                if (_NavMesh)
+                if (_navMesh)
                 {
                     vector.x = -2;
-                    _NavMesh.transform.localScale += Vector3.left * -4;
+                    _navMesh.transform.localScale += Vector3.left * -4;
                 }
                 break;
         }
         if (_destroy != null)
         {
             DestroyImmediate(_destroy.gameObject);
-            if (_NavMesh)
+            if (_navMesh)
             {
                 for (int i = 0; i < 2; i++)
                 {
-                    if (_NavMesh.transform.localScale[i] == 10)
+                    if (_navMesh.transform.localScale[i] == 10)
                     {
                         vector[i == 1 ? 2 : 0] = 0;
                     }
                 }
-                _NavMesh.transform.localPosition = vector;
+                _navMesh.transform.localPosition = vector;
             }
         }
     }

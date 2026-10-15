@@ -29,7 +29,7 @@ public class MazeGenerator : CellBuilder
     protected override void Build()
     {
     IL_0001:
-        Transform transform = CreateParentFromPosition("Room");
+        Transform transform = CreateParentFromPosition("Generated Maze", true);
         Cell[,,] cells = new Cell[size.x, size.y, size.z];
         Vector3Int sizePatch = Vector3Int.zero, positionPatch = Vector3Int.zero, positionCur, start, end;
         int attempts;
@@ -72,7 +72,7 @@ public class MazeGenerator : CellBuilder
 
                 if (!flag)
                 {
-                    List<Vector3Int> portentialPatchConnections = new List<Vector3Int>();
+                    List<Vector3Int> potentialPatchConnections = new List<Vector3Int>();
                     for (int x = start.x; x < end.x; x++)
                     {
                         for (int y = start.y; y < end.y; y++)
@@ -96,7 +96,7 @@ public class MazeGenerator : CellBuilder
                                 positionCur = new Vector3Int(x, y, z);
                                 if (BuilderHelper.GetFreeNeighbors(cells, positionCur).Count > 0)
                                 {
-                                    portentialPatchConnections.Add(positionCur);
+                                    potentialPatchConnections.Add(positionCur);
                                 }
                             }
                         }
@@ -105,9 +105,9 @@ public class MazeGenerator : CellBuilder
                     int countConnections = Random(minPatchConnections, maxPatchConnections);
                     for (int a = 0; a < countConnections; a++)
                     {
-                        if (portentialPatchConnections.Count > 0)
+                        if (potentialPatchConnections.Count > 0)
                         {
-                            patchConnections.Add(portentialPatchConnections.Random());
+                            patchConnections.Add(potentialPatchConnections.Random());
                         }
                     }
                     flag0 = true;

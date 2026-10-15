@@ -19,10 +19,10 @@ public class RandomObjectBuilder : ObjectsReplacer
     }
     protected override void Build()
     {
-        Transform t, a = CreateParentFromPosition("Objects");
+        Transform t, a = CreateParentFromPosition("Random Objects", true);
         for (int i = 0; i < size.y; i++)
         {
-            t = CreateParentFromPosition("Objects");
+            t = CreateParentFromPosition("Objects", false);
             t.SetParent(a);
             int c = Random(min, max);
             for (int j = 0; j < c; j++)
