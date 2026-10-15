@@ -32,7 +32,7 @@ public class BuilderRenderer : MonoBehaviour
     }
     public Color areaColor = new Color(0, 1, 0, 0.5f);
     public Vector3Int size = Vector3Int.one;
-    public static BuilderRenderer Instance => instance ??= FindFirstObjectByType<BuilderRenderer>();
+    public static BuilderRenderer Instance => instance = instance == null ? (FindObjectOfType<BuilderRenderer>() ?? new GameObject("Builder Renderer").AddComponent<BuilderRenderer>()) : instance;
     private static BuilderRenderer instance;
 }
 public static class BuilderHelper
@@ -41,7 +41,7 @@ public static class BuilderHelper
     public static Material wall => Resources.Load("Placeholder_Wall") as Material;
     public static Material floor => Resources.Load("Placeholder_Floor") as Material;
     public static Vector3Int position => GetGridPosition(BuilderRenderer.Instance.transform.position);
-    private static Vector3Int[] directions => new Vector3Int[]
+    private static Vector3Int[] directions = new Vector3Int[]
      {
     new Vector3Int(0,0,1),
     new Vector3Int(0,1,0),
@@ -70,7 +70,7 @@ public static class BuilderHelper
             flag = true;
             for (int j = 0; j < range; j++)
             {
-                pos0 = pos + AllDirections[i] * range;
+                pos0 = pos + AllDirections[i] * (j + 1);
                 if (ContainsOutOfRange(cells, pos0) || ContainsCell(cells, pos0))
                 {
                     flag = false;

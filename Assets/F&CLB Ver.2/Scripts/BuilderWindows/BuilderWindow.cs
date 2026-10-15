@@ -11,7 +11,6 @@ public class BuilderWindow : EditorWindow
     protected static System.Random random;
     protected virtual void OnGUI()
     {
-        InitializeRenderer();
         Vector3Int v = EditorGUILayout.Vector3IntField("Position:", buildPosition);
         if (v != buildPosition)
         {
@@ -33,13 +32,6 @@ public class BuilderWindow : EditorWindow
         if (GUILayout.Button("Build!"))
         {
             Build();
-        }
-    }
-    private static void InitializeRenderer()
-    {
-        if (!BuilderRenderer.Instance)
-        {
-            new GameObject("Builder Renderer").AddComponent<BuilderRenderer>();
         }
     }
     protected virtual void InitializeWindow<T>() where T : EditorWindow

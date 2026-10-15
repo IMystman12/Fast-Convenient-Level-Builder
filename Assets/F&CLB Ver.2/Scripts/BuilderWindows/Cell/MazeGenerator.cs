@@ -28,7 +28,6 @@ public class MazeGenerator : CellBuilder
     }
     protected override void Build()
     {
-    IL_0001:
         Transform transform = CreateParentFromPosition("Generated Maze", true);
         Cell[,,] cells = new Cell[size.x, size.y, size.z];
         Vector3Int sizePatch = Vector3Int.zero, positionPatch = Vector3Int.zero, positionCur, start, end;

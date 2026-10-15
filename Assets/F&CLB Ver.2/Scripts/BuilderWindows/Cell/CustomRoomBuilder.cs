@@ -1,10 +1,11 @@
 #if UNITY_EDITOR
+using System;
 using UnityEditor;
 using UnityEngine;
 
 public class CustomRoomBuilder : CellBuilder
 {
-    bool x, y = true, z, xF, yF, zF, pastOn, pastOff;
+    bool x, y = true, z, xF, yF, zF;
     bool[,,] blocks;
     GUILayoutOption[] standardOptions => new GUILayoutOption[] { GUILayout.Height(10), GUILayout.Width(10) };
     [MenuItem("Window/Level Builders/Rooms/Custom Room")]
@@ -15,74 +16,43 @@ public class CustomRoomBuilder : CellBuilder
     protected override void VirtualVariablesOnGUI()
     {
         base.VirtualVariablesOnGUI();
-        Event e = Event.current;
-        if (e.type == EventType.MouseDown)
-        {
-        }
-        bool flag = false;
+
         for (int i = 0; i < 3; i++)
         {
-            if (blocks == null || (blocks.GetLength(i) != size[i] && !flag))
+            if (blocks == null || (blocks.GetLength(i) != size[i]))
             {
-                flag = true;
                 blocks = new bool[size.x, size.y, size.z];
+                break;
             }
         }
+
+        EditorGUILayout.Space(25);
+
         EditorGUILayout.BeginHorizontal();
         x = EditorGUILayout.Toggle("X ", x);
         y = EditorGUILayout.Toggle("Y ", y);
         z = EditorGUILayout.Toggle("Z ", z);
         EditorGUILayout.EndHorizontal();
-        bool org = false;
-        bool invert = false;
-        if (GUILayout.Button("All On!"))
-        {
-            for (int a = 0; a < blocks.GetLength(0); a++)
-            {
-                for (int b = 0; b < blocks.GetLength(1); b++)
-                {
-                    for (int c = 0; c < blocks.GetLength(2); c++)
-                    {
-                        blocks[a, b, c] = true;
-                    }
-                }
-            }
-        }
-        if (GUILayout.Button("All Off!"))
-        {
-            for (int a = 0; a < blocks.GetLength(0); a++)
-            {
-                for (int b = 0; b < blocks.GetLength(1); b++)
-                {
-                    for (int c = 0; c < blocks.GetLength(2); c++)
-                    {
-                        blocks[a, b, c] = false;
-                    }
-                }
-            }
-        }
+
+        if (GUILayout.Button("All On!")) SetAll(a => true);
+        if (GUILayout.Button("All Off!")) SetAll(a => false);
+        if (GUILayout.Button("Invert!")) SetAll(a => !a);
+
+        EditorGUILayout.Space(25);
+
+        bool org;
         if (x)
         {
-            EditorGUILayout.Space(10);
             xF = EditorGUILayout.Foldout(xF, "X:");
             if (xF)
             {
-                if (GUILayout.Button("Invert!"))
-                {
-                    invert = true;
-                }
-                EditorGUILayout.Space(5);
-                EditorGUILayout.LabelField("Blocks:");
+                EditorGUILayout.LabelField("Don't spawn:");
                 for (int y = blocks.GetLength(1) - 1; y > -1; y--)
                 {
                     EditorGUILayout.BeginHorizontal();
                     for (int z = 0; z < blocks.GetLength(2); z++)
                     {
                         org = blocks[0, y, z];
-                        if (invert)
-                        {
-                            blocks[0, y, z] = !blocks[0, y, z];
-                        }
                         blocks[0, y, z] = EditorGUILayout.Toggle(blocks[0, y, z], standardOptions);
                         if (org != blocks[0, y, z])
                         {
@@ -95,18 +65,14 @@ public class CustomRoomBuilder : CellBuilder
                     }
                     EditorGUILayout.EndHorizontal();
                 }
+                EditorGUILayout.LabelField("z: 0, y: 0");
             }
         }
         if (y)
         {
-            EditorGUILayout.Space(10);
             yF = EditorGUILayout.Foldout(yF, "Y:");
             if (yF)
             {
-                if (GUILayout.Button("Invert!"))
-                {
-                    invert = true;
-                }
                 EditorGUILayout.Space(5);
                 EditorGUILayout.LabelField("Blocks:");
                 for (int x = blocks.GetLength(0) - 1; x > -1; x--)
@@ -115,10 +81,6 @@ public class CustomRoomBuilder : CellBuilder
                     for (int z = 0; z < blocks.GetLength(2); z++)
                     {
                         org = blocks[x, 0, z];
-                        if (invert)
-                        {
-                            blocks[x, 0, z] = !blocks[x, 0, z];
-                        }
                         blocks[x, 0, z] = EditorGUILayout.Toggle(blocks[x, 0, z], standardOptions);
                         if (org != blocks[x, 0, z])
                         {
@@ -135,14 +97,9 @@ public class CustomRoomBuilder : CellBuilder
         }
         if (z)
         {
-            EditorGUILayout.Space(10);
             zF = EditorGUILayout.Foldout(zF, "Z:");
             if (zF)
             {
-                if (GUILayout.Button("Invert!"))
-                {
-                    invert = true;
-                }
                 EditorGUILayout.Space(5);
                 EditorGUILayout.LabelField("Blocks:");
                 for (int y = blocks.GetLength(1) - 1; y > -1; y--)
@@ -151,10 +108,6 @@ public class CustomRoomBuilder : CellBuilder
                     for (int x = blocks.GetLength(0) - 1; x > -1; x--)
                     {
                         org = blocks[x, y, 0];
-                        if (invert)
-                        {
-                            blocks[x, y, 0] = !blocks[x, y, 0];
-                        }
                         blocks[x, y, 0] = EditorGUILayout.Toggle(blocks[x, y, 0], standardOptions);
                         if (org != blocks[x, y, 0])
                         {
@@ -166,6 +119,23 @@ public class CustomRoomBuilder : CellBuilder
                         }
                     }
                     EditorGUILayout.EndHorizontal();
+                }
+            }
+        }
+
+        EditorGUILayout.Space(25);
+
+    }
+    delegate bool SetAllAction(bool val);
+    void SetAll(SetAllAction action)
+    {
+        for (int a = 0; a < blocks.GetLength(0); a++)
+        {
+            for (int b = 0; b < blocks.GetLength(1); b++)
+            {
+                for (int c = 0; c < blocks.GetLength(2); c++)
+                {
+                    blocks[a, b, c] = action.Invoke(blocks[a, b, c]);
                 }
             }
         }
