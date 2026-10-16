@@ -32,7 +32,7 @@ public class BuilderRenderer : MonoBehaviour
     }
     public Color areaColor = new Color(0, 1, 0, 0.5f);
     public Vector3Int size = Vector3Int.one;
-    public static BuilderRenderer Instance => instance = instance == null ? (FindObjectOfType<BuilderRenderer>() ?? new GameObject("Builder Renderer").AddComponent<BuilderRenderer>()) : instance;
+    public static BuilderRenderer Instance => instance = instance == null ? (FindFirstObjectByType<BuilderRenderer>() ?? new GameObject("Builder Renderer").AddComponent<BuilderRenderer>()) : instance;
     private static BuilderRenderer instance;
 }
 public static class BuilderHelper

@@ -5,12 +5,14 @@ public class BuilderWindow : EditorWindow
 {
     public static Vector3Int buildPosition => BuilderHelper.position;
     protected static Vector3Int size => BuilderRenderer.Instance.size;
+    protected Vector2 scroll;
     public static bool navigationSurface = true;
     protected static bool useSeed;
     protected static int seed, previousSeed;
     protected static System.Random random;
     protected virtual void OnGUI()
     {
+        scroll = EditorGUILayout.BeginScrollView(scroll);
         Vector3Int v = EditorGUILayout.Vector3IntField("Position:", buildPosition);
         if (v != buildPosition)
         {
@@ -33,6 +35,7 @@ public class BuilderWindow : EditorWindow
         {
             Build();
         }
+        EditorGUILayout.EndScrollView();
     }
     protected virtual void InitializeWindow<T>() where T : EditorWindow
     {
@@ -67,16 +70,17 @@ public class BuilderWindow : EditorWindow
 }
 public class CellBuilder : BuilderWindow
 {
-    public static Material ceiling;
-    public static Material wall;
-    public static Material floor;
-    protected override void InitializeWindow<T>()
+    public static CellBuilder Instance { get; protected set; }
+    public Material ceiling;
+    public Material wall;
+    public Material floor;
+    void Awake()
     {
-        base.InitializeWindow<T>();
         ceiling = BuilderHelper.ceiling;
         wall = BuilderHelper.wall;
         floor = BuilderHelper.floor;
     }
+    void OnFocus() => Instance = this;
     protected override void VirtualVariablesOnGUI()
     {
         ceiling = EditorGUILayout.ObjectField("Celing:", ceiling, typeof(Material), false) as Material;

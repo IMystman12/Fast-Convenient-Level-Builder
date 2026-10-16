@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ public class CustomRoomBuilder : CellBuilder
 {
     bool x, y = true, z, xF, yF, zF;
     bool[,,] blocks;
-    GUILayoutOption[] standardOptions => new GUILayoutOption[] { GUILayout.Height(10), GUILayout.Width(10) };
+    GUILayoutOption[] standardOptions => new GUILayoutOption[] { GUILayout.Height(25), GUILayout.Width(25) };
     [MenuItem("Window/Level Builders/Rooms/Custom Room")]
     public static void ShowWindow()
     {
@@ -27,26 +28,28 @@ public class CustomRoomBuilder : CellBuilder
         }
 
         EditorGUILayout.Space(25);
-
         EditorGUILayout.BeginHorizontal();
-        x = EditorGUILayout.Toggle("X ", x);
-        y = EditorGUILayout.Toggle("Y ", y);
-        z = EditorGUILayout.Toggle("Z ", z);
-        EditorGUILayout.EndHorizontal();
-
         if (GUILayout.Button("All On!")) SetAll(a => true);
         if (GUILayout.Button("All Off!")) SetAll(a => false);
         if (GUILayout.Button("Invert!")) SetAll(a => !a);
-
+        EditorGUILayout.EndHorizontal();
+        if (GUILayout.Button("Open demo")) Application.OpenURL("file:///" + Path.GetFullPath(AssetDatabase.GetAssetPath(Resources.Load("Custom Room DEMO"))));
         EditorGUILayout.Space(25);
 
+        EditorGUILayout.BeginHorizontal();
+        x = EditorGUILayout.Toggle("X ", x, standardOptions);
+        y = EditorGUILayout.Toggle("Y ", y, standardOptions);
+        z = EditorGUILayout.Toggle("Z ", z, standardOptions);
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.LabelField("Don't spawn:");        
+        EditorGUILayout.Space(25);
         bool org;
         if (x)
         {
-            xF = EditorGUILayout.Foldout(xF, "X:");
+            xF = EditorGUILayout.Foldout(xF, "View at X+");
             if (xF)
             {
-                EditorGUILayout.LabelField("Don't spawn:");
                 for (int y = blocks.GetLength(1) - 1; y > -1; y--)
                 {
                     EditorGUILayout.BeginHorizontal();
@@ -65,20 +68,19 @@ public class CustomRoomBuilder : CellBuilder
                     }
                     EditorGUILayout.EndHorizontal();
                 }
-                EditorGUILayout.LabelField("z: 0, y: 0");
+                EditorGUILayout.LabelField("y: 0, z: 0");
+                EditorGUILayout.Space(25);
             }
         }
         if (y)
         {
-            yF = EditorGUILayout.Foldout(yF, "Y:");
+            yF = EditorGUILayout.Foldout(yF, "View at Y+");
             if (yF)
             {
-                EditorGUILayout.Space(5);
-                EditorGUILayout.LabelField("Blocks:");
-                for (int x = blocks.GetLength(0) - 1; x > -1; x--)
+                for (int z = blocks.GetLength(2) - 1; z > -1; z--)
                 {
                     EditorGUILayout.BeginHorizontal();
-                    for (int z = 0; z < blocks.GetLength(2); z++)
+                    for (int x = 0; x < blocks.GetLength(0); x++)
                     {
                         org = blocks[x, 0, z];
                         blocks[x, 0, z] = EditorGUILayout.Toggle(blocks[x, 0, z], standardOptions);
@@ -93,15 +95,15 @@ public class CustomRoomBuilder : CellBuilder
                     }
                     EditorGUILayout.EndHorizontal();
                 }
+                EditorGUILayout.LabelField("z: 0, x: 0");
+                EditorGUILayout.Space(25);
             }
         }
         if (z)
         {
-            zF = EditorGUILayout.Foldout(zF, "Z:");
+            zF = EditorGUILayout.Foldout(zF, "View at Z+");
             if (zF)
             {
-                EditorGUILayout.Space(5);
-                EditorGUILayout.LabelField("Blocks:");
                 for (int y = blocks.GetLength(1) - 1; y > -1; y--)
                 {
                     EditorGUILayout.BeginHorizontal();
@@ -120,6 +122,8 @@ public class CustomRoomBuilder : CellBuilder
                     }
                     EditorGUILayout.EndHorizontal();
                 }
+                EditorGUILayout.LabelField($"x: {blocks.GetLength(0)}, y: 0");
+                EditorGUILayout.Space(25);
             }
         }
 

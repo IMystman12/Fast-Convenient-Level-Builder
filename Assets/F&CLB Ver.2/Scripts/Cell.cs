@@ -25,21 +25,21 @@ public class Cell : MonoBehaviour
     }
     public void Initialize()
     {
-        ceiling.material = CellBuilder.ceiling;
-        if (CellBuilder.ceiling == null)
+        ceiling.material = CellBuilder.Instance.ceiling;
+        if (CellBuilder.Instance.ceiling == null)
         {
             DestroyImmediate(ceiling.gameObject);
         }
         for (int i = 0; i < walls.Length; i++)
         {
-            walls[i].material = CellBuilder.wall;
-            if (CellBuilder.wall == null)
+            walls[i].material = CellBuilder.Instance.wall;
+            if (CellBuilder.Instance.wall == null)
             {
                 DestroyImmediate(walls[i].gameObject);
             }
         }
-        floor.material = CellBuilder.floor;
-        if (CellBuilder.floor == null)
+        floor.material = CellBuilder.Instance.floor;
+        if (CellBuilder.Instance.floor == null)
         {
             DestroyImmediate(floor.gameObject);
         }
