@@ -6,9 +6,8 @@ public class BuilderWindow : EditorWindow
     public static Vector3Int buildPosition => BuilderHelper.position;
     protected static Vector3Int size => BuilderRenderer.Instance.size;
     protected Vector2 scroll;
-    public static bool navigationSurface = true;
     protected static bool useSeed;
-    protected static int seed, previousSeed;
+    protected int seed;
     protected static System.Random random;
     protected virtual void OnGUI()
     {
@@ -19,16 +18,14 @@ public class BuilderWindow : EditorWindow
             BuilderRenderer.Instance.transform.position = v * 10;
         }
         BuilderRenderer.Instance.size = EditorGUILayout.Vector3IntField("Size:", size);
-        navigationSurface = GUILayout.Toggle(navigationSurface, "Navigation Surface");
         useSeed = GUILayout.Toggle(useSeed, "Use Seed");
         if (useSeed)
         {
-            previousSeed = EditorGUILayout.IntField("Seed", seed);
-            if (random == null || previousSeed != seed || GUILayout.Button("New Random!"))
+            seed = EditorGUILayout.IntField("Seed", seed);
+            if (random == null || GUILayout.Button("New Random!"))
             {
                 random = new System.Random(seed);
             }
-            seed = previousSeed;
         }
         VirtualVariablesOnGUI();
         if (GUILayout.Button("Build!"))
@@ -74,6 +71,7 @@ public class CellBuilder : BuilderWindow
     public Material ceiling;
     public Material wall;
     public Material floor;
+    public static bool navigationSurface = true, floorWanderPoint = true, centerWanderPoint;
     void Awake()
     {
         ceiling = BuilderHelper.ceiling;
@@ -83,6 +81,9 @@ public class CellBuilder : BuilderWindow
     void OnFocus() => Instance = this;
     protected override void VirtualVariablesOnGUI()
     {
+        navigationSurface = GUILayout.Toggle(navigationSurface, "Navigation Surface");
+        floorWanderPoint = GUILayout.Toggle(floorWanderPoint, "Floor Wander Point");
+        centerWanderPoint = GUILayout.Toggle(centerWanderPoint, "Center Wander Point");
         ceiling = EditorGUILayout.ObjectField("Celing:", ceiling, typeof(Material), false) as Material;
         wall = EditorGUILayout.ObjectField("Wall:", wall, typeof(Material), false) as Material;
         floor = EditorGUILayout.ObjectField("Floor:", floor, typeof(Material), false) as Material;

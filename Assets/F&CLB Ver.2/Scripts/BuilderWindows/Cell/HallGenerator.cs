@@ -32,7 +32,7 @@ public class HallGenerator : CellBuilder
     }
     protected override void Build()
     {
-        Transform roomBase = CreateParentFromPosition("Generated Hall",true);
+        Transform roomBase = CreateParentFromPosition("Generated Hall", true);
         Plot[,,] plotMap = new Plot[size.x, size.y, size.z];
         List<Plot> plots = new List<Plot>();
 
@@ -159,6 +159,7 @@ public class HallGenerator : CellBuilder
                     }
                     break;
             }
+            BuilderHelper.ApplyPoint(roomBase);
             BuilderHelper.ClearCellScripts(cells);
         }
     }

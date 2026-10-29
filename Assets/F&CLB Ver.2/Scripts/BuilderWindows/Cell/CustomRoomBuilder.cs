@@ -1,5 +1,4 @@
 #if UNITY_EDITOR
-using System;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -42,7 +41,7 @@ public class CustomRoomBuilder : CellBuilder
         z = EditorGUILayout.Toggle("Z ", z, standardOptions);
         EditorGUILayout.EndHorizontal();
 
-        EditorGUILayout.LabelField("Don't spawn:");        
+        EditorGUILayout.LabelField("Don't spawn:");
         EditorGUILayout.Space(25);
         bool org;
         if (x)
@@ -163,6 +162,7 @@ public class CustomRoomBuilder : CellBuilder
                 }
             }
         }
+        BuilderHelper.ApplyPoint(room);
         BuilderHelper.ClearCellScripts(cells);
     }
 }

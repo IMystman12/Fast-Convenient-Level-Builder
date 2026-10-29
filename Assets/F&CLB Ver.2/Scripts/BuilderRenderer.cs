@@ -172,6 +172,23 @@ public static class BuilderHelper
         }
         return directions.Length;
     }
+    public static void ApplyPoint(Transform parent)
+    {
+        Transform point;
+        var size = BuilderRenderer.Instance.size;
+        if (CellBuilder.floorWanderPoint)
+        {
+            point = new GameObject("_WanderPoint_Floor").transform;
+            point.SetParent(parent);
+            point.localPosition = new Vector3((size.x * 5) - 5, 0, (size.z * 5) - 5);
+        }
+        if (CellBuilder.centerWanderPoint)
+        {
+            point = new GameObject("_WanderPoint_Center").transform;
+            point.SetParent(parent);
+            point.localPosition = new Vector3((size.x * 5) - 5, size.y * 5, (size.z * 5) - 5);
+        }
+    }
     public static void ClearCellScripts(Cell[,,] cells)
     {
         for (int x = 0; x < cells.GetLength(0); x++)

@@ -26,6 +26,7 @@ public class RoomBuilder : CellBuilder
                 }
             }
         }
+        BuilderHelper.ApplyPoint(transform);
         BuilderHelper.ClearCellScripts(cells);
     }
 }

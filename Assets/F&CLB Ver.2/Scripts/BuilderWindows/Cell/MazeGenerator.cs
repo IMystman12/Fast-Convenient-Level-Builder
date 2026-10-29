@@ -177,7 +177,7 @@ public class MazeGenerator : CellBuilder
                 BuilderHelper.ConnectCell(BuilderHelper.CellFromPosition(cells, pos0), BuilderHelper.CellFromPosition(cells, item));
             }
         }
-
+        BuilderHelper.ApplyPoint(transform);
         BuilderHelper.ClearCellScripts(cells);
     }
 }
